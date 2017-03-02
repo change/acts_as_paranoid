@@ -4,6 +4,7 @@ source "https://rubygems.org"
 group :development do
   gem "sqlite3", :platforms => [:ruby]
   gem "activerecord-jdbcsqlite3-adapter", :platforms => [:jruby]
+  gem "timecop"
 end
 
 gemspec
