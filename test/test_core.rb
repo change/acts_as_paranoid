@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'timecop'
 
 class ParanoidTest < ParanoidBaseTest
   def test_paranoid?
@@ -37,6 +38,25 @@ class ParanoidTest < ParanoidBaseTest
     assert_equal 3, ParanoidTime.with_deleted.count
     assert_equal 3, ParanoidBoolean.with_deleted.count
     assert_equal 1, ParanoidString.with_deleted.count
+  end
+
+  def test_fake_removal_with_touch
+    future = Time.now.utc + 60
+    tree = ParanoidTree.create(name: 'SillyTree')
+    Timecop.freeze(future) do
+      tree.destroy
+    end
+    assert_equal future, tree.updated_at.utc
+    assert_equal future, tree.reload.updated_at.utc
+  end
+
+  def test_fake_removal_without_touch
+    future = Time.now.utc + 60
+    paranoid_time = ParanoidTime.first
+    Timecop.freeze(future) do
+      paranoid_time.destroy
+    end
+    assert_not_equal paranoid_time.updated_at.utc, future
   end
 
   def test_real_removal

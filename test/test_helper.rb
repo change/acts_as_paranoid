@@ -446,7 +446,7 @@ class ParanoidForest < ActiveRecord::Base
 end
 
 class ParanoidTree < ActiveRecord::Base
-  acts_as_paranoid
+  acts_as_paranoid(touch: true)
   belongs_to :paranoid_forest
   validates_presence_of :name
 end

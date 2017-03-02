@@ -36,7 +36,12 @@ module ActsAsParanoid
       end
 
       def delete_all(conditions = nil)
-        where(conditions).update_all(["#{paranoid_configuration[:column]} = ?", delete_now_value])
+        ar = where(conditions)
+        if paranoid_configuration[:touch]
+          ar.update_all(["#{paranoid_configuration[:column]} = ?, updated_at = ?", delete_now_value, Time.now])
+        else
+          ar.update_all(["#{paranoid_configuration[:column]} = ?", delete_now_value])
+        end
       end
 
       def paranoid_default_scope
@@ -124,6 +129,7 @@ module ActsAsParanoid
             # Handle composite keys, otherwise we would just use `self.class.primary_key.to_sym => self.id`.
             self.class.delete_all(Hash[[Array(self.class.primary_key), Array(self.id)].transpose]) if persisted?
             self.paranoid_value = self.class.delete_now_value
+            self.updated_at = Time.now if self.class.paranoid_configuration[:touch]
             self
           end
         end
