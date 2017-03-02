@@ -39,6 +39,12 @@ If your column type is a `string`, you can also specify which value to use when 
 
 If your column type is a `boolean`, it is possible to specify `allow_nulls` option which is `true` by default. When set to `false`, entities that have `false` value in this column will be considered not deleted, and those which have `true` will be considered deleted. When `true` everything that has a not-null value will be considered deleted.
 
+Additionally, you can specify whether or not you want the `updated_at` column updated on delete. This option accepts a boolean and defaults to `false`:
+
+- `:touch => false`
+
+Setting it to `true` will set `updated_at` to `Time.now` when the record is soft-deleted.
+
 ### Filtering
 
 If a record is deleted by ActsAsParanoid, it won't be retrieved when accessing the database.
