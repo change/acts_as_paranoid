@@ -2,14 +2,17 @@
 
 source "https://rubygems.org"
 
-# Development dependencies
-group :development do
-  gem "sqlite3", :platforms => [:ruby]
-  gem "activerecord-jdbcsqlite3-adapter", :platforms => [:jruby]
-  gem "timecop"
-  gem "activerecord-jdbcsqlite3-adapter", platforms: [:jruby]
-  gem "sqlite3", platforms: [:ruby]
-  gem "timecop"
+github "rails/rails" do
+  gem "activerecord", require: "active_record"
+  gem "activesupport", require: "active_support"
 end
 
-gemspec
+# Development dependencies
+group :development do
+  gem "activerecord-jdbcsqlite3-adapter", platforms: [:jruby]
+  gem "sqlite3", platforms: [:ruby]
+end
+
+gemspec path: "../"
+
+gem "arel", github: "rails/arel"
